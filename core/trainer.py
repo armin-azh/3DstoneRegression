@@ -1,10 +1,6 @@
-import torch
-
 # utils
 from core.utils import flush_and_gc
 
-# transformer
-from core.transforms import get_transforms
 
 
 class BaseTrain:
@@ -29,11 +25,11 @@ class TrainerV1(BaseTrain):
 
     @flush_and_gc
     def train_step(self, **kwargs):
-        raise NotImplementedError
+        pass
 
     @flush_and_gc
     def validation_step(self, **kwargs):
-        raise NotImplementedError
+        pass
 
     def train(self, **kwargs):
-        raise NotImplementedError
+        pass
