@@ -40,7 +40,7 @@ def main(arguments: Namespace) -> None:
         criterion = LOSS_FACTORY[arguments.loss_fn]
         opt = OPTIMIZATION_FACTORY[arguments.opt_fn]
         scheduler = SCHEDULER_FACTORY[arguments.scheduler_fn]
-        model = Model3DV1(n_channels=arguments.n_channel, n_feature=arguments.n_feature_map)
+        model = Model3DV1(n_channels=1, n_feature=arguments.n_feature_map)
         in_f = Path(arguments.in_dir)
         if not in_f.is_absolute():
             in_f = BASE_DIR.joinpath(in_f)
@@ -79,7 +79,7 @@ def main(arguments: Namespace) -> None:
                             weight_decay=args.weight_decay,
                             lr=arguments.lr,
                             momentum=arguments.momentum)
-        print(trainer)
+        trainer.train(train_ld=dl_train, dev_ld=dl_dev, epochs=arguments.epochs)
     else:
         print("Wrong Option!")
 

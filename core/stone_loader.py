@@ -36,7 +36,7 @@ class Stone(Dataset):
         if self._transformers is not None:
             n_d_im = self._transformers(n_d_im)
 
-        return n_d_im, lb
+        return torch.unsqueeze(n_d_im, 0), lb
 
 
 # if __name__ == '__main__':

@@ -36,15 +36,25 @@ class TrainerV1(BaseTrain):
                                           step_size=3,
                                           gamma=0.1)
 
-        print(self._scheduler)
-
     @flush_and_gc
     def train_step(self, **kwargs):
-        pass
+        data,lb = kwargs["batch"]
+        data = data.to(self._device)
+        lb = lb.to(self._device)
+        pred = self._model(data)
 
     @flush_and_gc
     def validation_step(self, **kwargs):
         pass
 
     def train(self, **kwargs):
-        pass
+        train_ld = kwargs["train_ld"]
+        dev_ld = kwargs["dev_ld"]
+
+        for epoch in range(kwargs["epochs"]):
+
+            # train step
+            self._model.train()
+            for batch_idx, batch in enumerate(train_ld):
+                self.train_step(batch=batch)
+            # validation step
