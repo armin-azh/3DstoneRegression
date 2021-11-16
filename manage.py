@@ -1,6 +1,8 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
+from torch.utils.data import DataLoader, random_split
+
 # utils
 from core.utils import fix_all_seeds
 
@@ -26,6 +28,9 @@ from core.trainer import TrainerV1
 # scheduler
 from core.scheduler import SCHEDULER_FACTORY
 
+# transformer
+from core.transforms import get_transforms
+
 
 def main(arguments: Namespace) -> None:
     fix_all_seeds(seed=arguments.seed)
@@ -43,6 +48,28 @@ def main(arguments: Namespace) -> None:
         label_f = Path(arguments.label_file)
         if not label_f.is_absolute():
             label_f = BASE_DIR.joinpath(label_f)
+
+        dataset = Stone(images_dir=in_f,
+                        label_xlx=label_f,
+                        transformers=get_transforms(p_hor=arguments.random_h_flip,
+                                                    p_ver=arguments.random_v_flip,
+                                                    r_degree=arguments.random_degree_rotate,
+                                                    n_channel=arguments.n_channel
+                                                    ))
+
+        train_size = int(len(dataset) * arguments.train_size)
+        dev_size = len(dataset) - train_size
+        train_set, dev_set = random_split(dataset, [train_size, dev_size])
+
+        dl_train = DataLoader(train_set,
+                              batch_size=arguments.batch_size,
+                              shuffle=True,
+                              num_workers=arguments.n_worker)
+
+        dl_dev = DataLoader(dev_set,
+                            batch_size=arguments.batch_size,
+                            shuffle=False,
+                            num_workers=arguments.n_worker)
 
         trainer = TrainerV1(model=model,
                             criterion=criterion,
@@ -74,7 +101,7 @@ if __name__ == '__main__':
     parser.add_argument("--y_size", help="image y size", type=int, default=150)
     parser.add_argument("--z_size", help="image z size", type=int, default=150)
     parser.add_argument("--epochs", help='number of epochs', type=int, default=10)
-    parser.add_argument("--n_batch", help='number of batches', type=int, default=4)
+    parser.add_argument("--batch_size", help='number of batches', type=int, default=4)
     parser.add_argument("--lr", help="learning rate", type=float, default=1e-3)
     parser.add_argument("--momentum", help="momentum parameter", type=float, default=0.9)
     parser.add_argument("--weight_decay", help="weight decay", type=float, default=5e-4)
@@ -91,6 +118,8 @@ if __name__ == '__main__':
     parser.add_argument("--random_degree_rotate", help="random rotate degrees", type=float, default=10.)
     parser.add_argument("--n_channel", help="number of channels", type=int, default=150)
     parser.add_argument("--n_feature_map", help="number of feature map", type=int, default=32)
+    parser.add_argument("--train_size", help="train set size", type=float, default=.9)
+    parser.add_argument("--dev_size", help="dev set size", type=float, default=.1)
 
     args = parser.parse_args()
     main(arguments=args)
