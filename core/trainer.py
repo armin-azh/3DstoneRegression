@@ -21,6 +21,16 @@ class BaseTrain:
 class TrainerV1(BaseTrain):
     def __init__(self, *args, **kwargs):
         super(TrainerV1, self).__init__()
+        self._model = kwargs["model"]
+        self._device = kwargs["device"]
+        self._criterion = kwargs["criterion"]
+        self._opt = kwargs["opt"]
+
+        self._model.to(self._device)
+        self._opt = self._opt(self._model.parameters(),
+                              lr=kwargs["lr"],
+                              momentum=kwargs["momentum"],
+                              weight_decay=kwargs["weight_decay"])
 
     @flush_and_gc
     def train_step(self, **kwargs):
