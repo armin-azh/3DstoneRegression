@@ -25,12 +25,18 @@ class TrainerV1(BaseTrain):
         self._device = kwargs["device"]
         self._criterion = kwargs["criterion"]
         self._opt = kwargs["opt"]
+        self._scheduler = kwargs["scheduler"]
 
         self._model.to(self._device)
         self._opt = self._opt(self._model.parameters(),
                               lr=kwargs["lr"],
                               momentum=kwargs["momentum"],
                               weight_decay=kwargs["weight_decay"])
+        self._scheduler = self._scheduler(self._opt,
+                                          step_size=3,
+                                          gamma=0.1)
+
+        print(self._scheduler)
 
     @flush_and_gc
     def train_step(self, **kwargs):

@@ -34,14 +34,20 @@ def main(arguments: Namespace) -> None:
 
         criterion = LOSS_FACTORY[arguments.loss_fn]
         opt = OPTIMIZATION_FACTORY[arguments.opt_fn]
+        scheduler = SCHEDULER_FACTORY[arguments.scheduler_fn]
         model = Model3DV1(n_channels=arguments.n_channel, n_feature=arguments.n_feature_map)
         in_f = Path(arguments.in_dir)
         if not in_f.is_absolute():
             in_f = BASE_DIR.joinpath(in_f)
 
+        label_f = Path(arguments.label_file)
+        if not label_f.is_absolute():
+            label_f = BASE_DIR.joinpath(label_f)
+
         trainer = TrainerV1(model=model,
                             criterion=criterion,
                             opt=opt,
+                            scheduler=scheduler,
                             device=device,
                             weight_decay=args.weight_decay,
                             lr=arguments.lr,
@@ -56,6 +62,7 @@ if __name__ == '__main__':
 
     # mode
     parser.add_argument("--input", dest="in_dir", help="input path", type=str)
+    parser.add_argument("--label_file", help="label excel file", type=str)
     parser.add_argument("--train", help="training runtime", action="store_true")
 
     # runtime stabilization
@@ -71,7 +78,8 @@ if __name__ == '__main__':
     parser.add_argument("--lr", help="learning rate", type=float, default=1e-3)
     parser.add_argument("--momentum", help="momentum parameter", type=float, default=0.9)
     parser.add_argument("--weight_decay", help="weight decay", type=float, default=5e-4)
-    parser.add_argument('--loss_fn', help="loss function", type=str, default="mae", choices=list(LOSS_FACTORY.keys()))
+    parser.add_argument('--loss_fn', help="loss function", type=str, default="mae",
+                        choices=list(LOSS_FACTORY.keys()))
     parser.add_argument("--opt_fn", help="optimization function", type=str, default="sgd",
                         choices=list(OPTIMIZATION_FACTORY.keys()))
     parser.add_argument("--scheduler_fn", help="scheduler function", type=str, default="step_lr",
