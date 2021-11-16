@@ -2,7 +2,6 @@
 from core.utils import flush_and_gc
 
 
-
 class BaseTrain:
     def __init__(self, *args, **kwargs):
         super(BaseTrain).__init__(*args, **kwargs)

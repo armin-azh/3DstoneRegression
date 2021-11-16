@@ -2,6 +2,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.ndimage import zoom
 import torch
 from torch.utils.data import Dataset
 
@@ -30,6 +31,7 @@ class Stone(Dataset):
             idx = idx.tolist()
 
         n_d_im = tiff.imread(str(self._f_list[idx]))
+        n_d_im = zoom(n_d_im, (0.5, 0.5, 0.5))
         lb = torch.as_tensor(self._lb[idx])
         if self._transformers is not None:
             n_d_im = self._transformers(n_d_im)
@@ -41,7 +43,7 @@ class Stone(Dataset):
 #     ds = Stone(
 #         images_dir=Path("/home/lizard/Documents/Code/Project/stoneRegression/data/TheCNNmodel/Res-01"),
 #         label_xlx=Path("/home/lizard/Documents/Code/Project/stoneRegression/data/TheCNNmodel/Labels.xlsx"),
-#         transformers=get_transforms(0.5, 0.5, 10.)
+#         transformers=get_transforms(0.5, 0.5, 10., n_channel=150)
 #     )
 #
-#     print(ds[1][0])
+#     print(ds[1][0].shape)

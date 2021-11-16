@@ -25,6 +25,9 @@ if __name__ == '__main__':
     parser.add_argument("--n_worker", help='number of workers', type=int, default=4)
 
     # hyper-parameter
+    parser.add_argument("--x_size", help="image x size", type=int, default=150)
+    parser.add_argument("--y_size", help="image y size", type=int, default=150)
+    parser.add_argument("--z_size", help="image z size", type=int, default=150)
     parser.add_argument("--epochs", help='number of epochs', type=int, default=10)
     parser.add_argument("--n_batch", help='number of batches', type=int, default=4)
     parser.add_argument("--lr", help="learning rate", type=float, default=1e-3)
