@@ -3,12 +3,20 @@ from argparse import ArgumentParser, Namespace
 # utils
 from core.utils import fix_all_seeds
 
+# loss
+from core.loss import LOSS_FACTORY
+
+# optimization
+from core.oprimizer import OPTIMIZATION_FACTORY
+
 
 def main(arguments: Namespace) -> None:
     fix_all_seeds(seed=arguments.seed)
 
     if arguments.train:
-        pass
+
+        criterion = LOSS_FACTORY[arguments.loss_fn]
+        print(criterion)
 
     else:
         print("Wrong Option!")
@@ -31,6 +39,9 @@ if __name__ == '__main__':
     parser.add_argument("--epochs", help='number of epochs', type=int, default=10)
     parser.add_argument("--n_batch", help='number of batches', type=int, default=4)
     parser.add_argument("--lr", help="learning rate", type=float, default=1e-3)
+    parser.add_argument('--loss_fn', help="loss function", type=str, default="mae", choices=list(LOSS_FACTORY.keys()))
+    parser.add_argument("--opt_fn", help="optimization function", type=str, default="sgd",
+                        choices=list(OPTIMIZATION_FACTORY.keys()))
 
     # data augmentation parameters
     parser.add_argument("--random_h_flip", help="random horizontal flip probability", type=float, default=.5)

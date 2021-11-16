@@ -22,7 +22,7 @@ class Model3DV1(nn.Module):
             nn.MaxPool3d(kernel_size=2),
             nn.ReLU(inplace=True),
             nn.Flatten(),
-            nn.Linear(in_features=87808, out_features=10),
+            nn.Linear(in_features=87808, out_features=1),
             nn.Sigmoid()
         )
 
