@@ -1,5 +1,6 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
+from datetime import datetime
 
 from torch.utils.data import DataLoader, random_split
 
@@ -34,6 +35,9 @@ from core.transforms import get_transforms
 
 def main(arguments: Namespace) -> None:
     fix_all_seeds(seed=arguments.seed)
+    _cu = datetime.strftime(datetime.now(), '%Y%m%d-%H%M%S')
+    output_path = BASE_DIR.joinpath("result").joinpath(_cu)
+    output_path.mkdir(parents=True, exist_ok=True)
 
     if arguments.train:
 
@@ -80,6 +84,7 @@ def main(arguments: Namespace) -> None:
                             lr=arguments.lr,
                             momentum=arguments.momentum)
         trainer.train(train_ld=dl_train, dev_ld=dl_dev, epochs=arguments.epochs)
+        trainer.save(save_path=output_path)
     else:
         print("Wrong Option!")
 

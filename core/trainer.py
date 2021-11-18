@@ -68,6 +68,7 @@ class TrainerV1(BaseTrain):
         glob_d_loss = []
 
         epochs = kwargs["epochs"]
+        glob_step = 0
         for epoch in range(epochs):
             tm_t_loss = []
             prefix = f"[{epoch + 1}|{epochs}] epoch,"
@@ -79,8 +80,10 @@ class TrainerV1(BaseTrain):
                 tm_t_loss.append(ls)
 
                 # show the result
-                if batch_idx + 1 % 10 == 0:
+                if glob_step + 1 % 10 == 0:
                     print(f"{prefix} [{batch_idx}] batch, Loss -> train: {tm_t_loss[-1]}")
+
+                glob_step += 1
 
             glob_t_loss.append(np.array(tm_t_loss).mean())
             self._scheduler.step()
@@ -97,3 +100,5 @@ class TrainerV1(BaseTrain):
 
             print(f"{prefix}, Loss -> train: {glob_t_loss[-1]}, dev: {glob_d_loss[-1]}")
 
+    def save(self, **kwargs):
+        torch.save(self._model.state_dict(), str(kwargs["save_path"].joinpath("model.pth")))
