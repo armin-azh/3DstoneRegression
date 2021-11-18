@@ -16,20 +16,17 @@ class Model3DV1(nn.Module):
             nn.MaxPool3d(kernel_size=2),
             nn.ReLU(inplace=True),
             nn.Conv3d(in_channels=n_feature * 2, out_channels=n_feature * 4, kernel_size=3),
-            nn.MaxPool3d(kernel_size=2),
-            nn.ReLU(inplace=True),
-            nn.Conv3d(in_channels=n_feature * 4, out_channels=n_feature * 8, kernel_size=3),
-            nn.MaxPool3d(kernel_size=2),
+            nn.MaxPool3d(kernel_size=3),
             nn.ReLU(inplace=True),
             nn.Flatten(),
-            nn.Linear(in_features=87808, out_features=1),
-            nn.Sigmoid()
+            nn.Linear(in_features=170368, out_features=1),
+            # nn.Sigmoid()
         )
 
     def forward(self, x: Tensor) -> Tensor:
         return self._model(x)
 
 
-# if __name__ == '__main__':
-#     m = Model3DV1(n_channels=1, n_feature=32)
-#     summary(m, (1, 150, 150, 150))
+if __name__ == '__main__':
+    m = Model3DV1(n_channels=1, n_feature=32)
+    summary(m, (1, 150, 150, 150))
