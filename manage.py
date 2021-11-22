@@ -106,7 +106,7 @@ if __name__ == '__main__':
     parser.add_argument("--y_size", help="image y size", type=int, default=150)
     parser.add_argument("--z_size", help="image z size", type=int, default=150)
     parser.add_argument("--epochs", help='number of epochs', type=int, default=10)
-    parser.add_argument("--batch_size", help='number of batches', type=int, default=2)
+    parser.add_argument("--batch_size", help='number of batches', type=int, default=1)
     parser.add_argument("--lr", help="learning rate", type=float, default=1e-3)
     parser.add_argument("--momentum", help="momentum parameter", type=float, default=0.9)
     parser.add_argument("--weight_decay", help="weight decay", type=float, default=5e-4)
