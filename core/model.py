@@ -19,7 +19,7 @@ class Model3DV1(nn.Module):
             nn.MaxPool3d(kernel_size=3),
             nn.ReLU(inplace=True),
             nn.Flatten(),
-            nn.Linear(in_features=170368, out_features=1),
+            nn.Linear(in_features=65536, out_features=1),
             # nn.Sigmoid()
         )
 
@@ -29,4 +29,4 @@ class Model3DV1(nn.Module):
 
 if __name__ == '__main__':
     m = Model3DV1(n_channels=1, n_feature=32)
-    summary(m, (1, 150, 150, 150))
+    summary(m, (1, 120, 120, 120))
