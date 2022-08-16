@@ -10,16 +10,23 @@ class Model3DV1(nn.Module):
 
         self._model = nn.Sequential(
             nn.Conv3d(in_channels=n_channels, out_channels=n_feature, kernel_size=3),
-            nn.MaxPool3d(kernel_size=2),
             nn.ReLU(inplace=True),
+            nn.MaxPool3d(kernel_size=2),
+
             nn.Conv3d(in_channels=n_feature, out_channels=n_feature * 2, kernel_size=3),
+            nn.ReLU(inplace=True),
             nn.MaxPool3d(kernel_size=2),
-            nn.ReLU(inplace=True),
+
             nn.Conv3d(in_channels=n_feature * 2, out_channels=n_feature * 4, kernel_size=3),
-            nn.MaxPool3d(kernel_size=3),
             nn.ReLU(inplace=True),
+            nn.MaxPool3d(kernel_size=3),
+
+            nn.Conv3d(in_channels=n_feature * 4, out_channels=n_feature * 8, kernel_size=3),
+            nn.ReLU(inplace=True),
+            nn.MaxPool3d(kernel_size=3),
+
             nn.Flatten(),
-            nn.Linear(in_features=65536, out_features=1),
+            # nn.Linear(in_features=65536, out_features=1),
             # nn.Sigmoid()
         )
 
